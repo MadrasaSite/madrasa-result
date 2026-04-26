@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Madrasa Dars-e-Rasool Official Account</title>
+
+<style>
+body{
+font-family: Arial;
+background: linear-gradient(to right,#e3f2fd,#fce4ec);
+text-align:center;
+padding:20px;
+}
+
+.header{
+background:#1a237e;
+color:white;
+padding:25px;
+border-radius:10px;
+}
+
+button{
+padding:10px 15px;
+margin:5px;
+background:#1a237e;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+input{
+padding:10px;
+width:80%;
+margin:8px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+.card{
+background:white;
+width:450px;
+margin:auto;
+padding:20px;
+border-radius:15px;
+box-shadow:0px 5px 20px rgba(0,0,0,0.2);
+margin-top:20px;
+}
+
+@keyframes slideText {
+0% { transform: translateX(100%); }
+100% { transform: translateX(-100%); }
+}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h2>🏫 MADRASA DARS-E-RASOOL</h2>
+
+<div style="overflow:hidden;white-space:nowrap;">
+<span style="
+display:inline-block;
+animation:slideText 10s linear infinite;
+color:#ffeb3b;
+font-weight:bold;
+">
+انجمن مہریہ نصیریہ ویلفیئر خادمین گولڑہ شریف
+</span>
+</div>
+
+<p style="font-size:14px;">
+Street No 10, Joy Shah Road, Lahore | Official Page | 2026 Monthly Test System
+</p>
+
+</div>
+
+<div style="margin-top:20px;">
+<button onclick="openTab('result')">📊 Result</button>
+<button onclick="openTab('announce')">📢 Announcement</button>
+<button onclick="openTab('gallery')">🖼 Gallery</button>
+<button onclick="openTab('admin')">🔐 Admin</button>
+</div>
+
+<div id="resultBox">
+
+<div class="card">
+<input id="roll" placeholder="Enter Roll Number (MDR1 - MDR25)">
+<br>
+<button onclick="checkResult()">Search Result</button>
+</div>
+
+<div id="output"></div>
+
+</div>
+
+<div id="announceBox" style="display:none;">
+<div class="card">
+<h3>📢 Announcement</h3>
+<p>✔ Monthly Exams: 1 and 2 May 2026</p>
+<p>✔ Attendance compulsory</p>
+</div>
+</div>
+
+<div id="galleryBox" style="display:none;">
+<div class="card">
+<h3>🖼 Gallery</h3>
+<p>Photos will be added soon</p>
+</div>
+</div>
+
+<div id="adminBox" style="display:none;">
+<div class="card">
+
+<h3>🔐 Admin Panel</h3>
+
+<input id="adminPass" type="password" placeholder="Enter Password">
+<button onclick="adminLogin()">Login</button>
+
+<p id="adminMsg"></p>
+
+<div id="editPanel" style="display:none;">
+
+<hr>
+
+<input id="editRoll" placeholder="Enter Roll (MDR1)">
+<br>
+<input id="editMarks" placeholder="New Total Marks">
+<br>
+
+<button onclick="updateMarks()">Update Marks</button>
+
+</div>
+
+</div>
+</div>
+
+<script>
+
+/* TABS */
+function openTab(tab){
+
+let boxes=["resultBox","adminBox","announceBox","galleryBox"];
+
+for(let i=0;i<boxes.length;i++){
+document.getElementById(boxes[i]).style.display="none";
+}
+
+document.getElementById(tab+"Box").style.display="block";
+}
+
+window.onload=function(){
+setTimeout(()=>openTab('result'),100);
+}
+
+/* STUDENTS */
+let students=[
+{roll:"MDR1",name:"Anam",behaviour:85,attendance:90,namaz_dua:88,quran:92,method:80,total:88},
+{roll:"MDR2",name:"Rizwan",behaviour:80,attendance:85,namaz_dua:82,quran:78,method:75,total:80},
+{roll:"MDR3",name:"Maryam",behaviour:90,attendance:88,namaz_dua:85,quran:95,method:87,total:89},
+{roll:"MDR4",name:"Ayesha",behaviour:78,attendance:80,namaz_dua:75,quran:82,method:70,total:77},
+{roll:"MDR5",name:"Amina",behaviour:88,attendance:92,namaz_dua:90,quran:94,method:85,total:90},
+
+{roll:"MDR6",name:"Dua",behaviour:82,attendance:84,namaz_dua:80,quran:86,method:78,total:82},
+{roll:"MDR7",name:"Hira",behaviour:80,attendance:83,namaz_dua:79,quran:84,method:76,total:80},
+{roll:"MDR8",name:"Sana",behaviour:86,attendance:88,namaz_dua:85,quran:90,method:82,total:86},
+{roll:"MDR9",name:"Areej",behaviour:91,attendance:93,namaz_dua:89,quran:95,method:88,total:91},
+{roll:"MDR10",name:"Nouman",behaviour:83,attendance:85,namaz_dua:80,quran:84,method:78,total:82},
+
+{roll:"MDR11",name:"Ali",behaviour:87,attendance:89,namaz_dua:85,quran:90,method:83,total:87},
+{roll:"MDR12",name:"Sufyan",behaviour:79,attendance:81,namaz_dua:78,quran:76,method:75,total:78},
+{roll:"MDR13",name:"Ahmad",behaviour:88,attendance:90,namaz_dua:86,quran:92,method:84,total:88},
+{roll:"MDR14",name:"Hassan",behaviour:80,attendance:82,namaz_dua:79,quran:78,method:77,total:80},
+{roll:"MDR15",name:"Usman",behaviour:85,attendance:87,namaz_dua:83,quran:88,method:81,total:85},
+
+{roll:"MDR16",name:"Bilal",behaviour:78,attendance:80,namaz_dua:76,quran:82,method:74,total:78},
+{roll:"MDR17",name:"Arham",behaviour:92,attendance:94,namaz_dua:90,quran:96,method:88,total:92},
+{roll:"MDR18",name:"Wahid",behaviour:81,attendance:83,namaz_dua:80,quran:85,method:77,total:81},
+{roll:"MDR19",name:"Hussain",behaviour:84,attendance:86,namaz_dua:82,quran:88,method:80,total:84},
+{roll:"MDR20",name:"Feroz",behaviour:86,attendance:88,namaz_dua:84,quran:90,method:82,total:86},
+
+{roll:"MDR21",name:"Dastageer",behaviour:80,attendance:82,namaz_dua:78,quran:84,method:76,total:80},
+{roll:"MDR22",name:"Ali Sher",behaviour:83,attendance:85,namaz_dua:81,quran:87,method:79,total:83},
+{roll:"MDR23",name:"Hoor Fatima",behaviour:90,attendance:92,namaz_dua:88,quran:95,method:86,total:90},
+{roll:"MDR24",name:"Imran Ali",behaviour:76,attendance:78,namaz_dua:74,quran:80,method:72,total:76},
+{roll:"MDR25",name:"Tariq",behaviour:88,attendance:90,namaz_dua:86,quran:91,method:84,total:88}
+];
+
+/* RESULT */
+function checkResult(){
+
+let roll=document.getElementById("roll").value.toUpperCase();
+let found=false;
+
+for(let i=0;i<students.length;i++){
+
+if(roll===students[i].roll){
+
+let t=students[i].total;
+let sorted=[...students].sort((a,b)=>b.total-a.total);
+let rank=sorted.findIndex(s=>s.roll===students[i].roll)+1;
+
+document.getElementById("output").innerHTML=`
+
+<div id="card" style="
+background:white;
+width:700px;
+margin:30px auto;
+padding:30px;
+border:5px double #1a237e;
+border-radius:10px;
+text-align:left;
+">
+
+<h2 style="text-align:center;color:#1a237e;">🏫 MADRASA DARS-E-RASOOL</h2>
+<hr>
+
+<p><b>Roll:</b> ${students[i].roll}</p>
+<p><b>Name:</b> ${students[i].name}</p>
+
+<hr>
+
+<p><b>Behaviour:</b> ${students[i].behaviour}</p>
+<p><b>Attendance:</b> ${students[i].attendance}</p>
+<p><b>Namaz/Dua:</b> ${students[i].namaz_dua}</p>
+<p><b>Quran:</b> ${students[i].quran}</p>
+<p><b>Method:</b> ${students[i].method}</p>
+
+<hr>
+
+<h3>Total: ${t}</h3>
+<h3>📊 Position: ${rank}</h3>
+
+<h3 style="color:${t>=60?'green':'red'};">
+${t>=60?'PASS':'FAIL'}
+</h3>
+
+<br>
+
+<div style="display:flex;gap:10px;">
+
+<button onclick="saveImage()" style="flex:1;background:#2e7d32;">🖼 Save Image</button>
+<button onclick="savePDF()" style="flex:1;background:#c62828;">📄 Save PDF</button>
+
+</div>
+
+</div>
+
+`;
+
+found=true;
+}
+}
+
+if(!found){
+document.getElementById("output").innerHTML="<p style='color:red;'>Result Not Found</p>";
+}
+}
+
+/* SAVE FIX */
+function savePDF(){
+let element=document.getElementById("card");
+html2pdf().from(element).save("Result.pdf");
+}
+
+function saveImage(){
+html2canvas(document.getElementById("card")).then(canvas=>{
+let link=document.createElement("a");
+link.download="Result.png";
+link.href=canvas.toDataURL();
+link.click();
+});
+}
+
+/* ADMIN */
+function adminLogin(){
+
+let pass=document.getElementById("adminPass").value;
+
+if(pass==="1234"){
+document.getElementById("adminMsg").innerText="Login Successful ✔";
+document.getElementById("adminMsg").style.color="green";
+document.getElementById("editPanel").style.display="block";
+}else{
+document.getElementById("adminMsg").innerText="Wrong Password ❌";
+document.getElementById("adminMsg").style.color="red";
+}
+}
+
+/* EDIT SYSTEM */
+function updateMarks(){
+
+let roll=document.getElementById("editRoll").value.toUpperCase();
+let marks=parseInt(document.getElementById("editMarks").value);
+
+for(let i=0;i<students.length;i++){
+
+if(students[i].roll===roll){
+
+students[i].total=marks;
+
+alert("Updated ✔ " + roll);
+
+return;
+}
+}
+
+alert("Not Found ❌");
+}
+
+</script>
+
+</body>
+</html>
